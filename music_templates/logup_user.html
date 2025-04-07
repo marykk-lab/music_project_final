@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles.css">
+    <title>Log up</title>
+</head>
+<body>
+    <h1>Login up</h1>
+    <form action="/register" method="post">
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username" required><br><br>
+
+        <label for = "password">Password:</label>
+        <input type="text" name="password" id="password" required><br><br>
+        
+        <label for="email">Email:</label>
+        <input type="text" name="email" id="email"><br><br>
+
+        <label for="full_name">Full name:</label>
+        <input type="text" name="full_name" id="full_name"><br><br>
+
+        <button type="submit">Add new user</button>
+    </form>
+
+    <span>You already have an account?</span>
+    <form action = "/login" method="get">
+        <button type="submit" class="login-button">Login</button>
+    </form>
+</body>
+</html>

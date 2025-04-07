@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles.css">
+    <title>My songs</title>
+</head>
+<body>
+    <h1>Welcome, {{ user.full_name or user.username }}!</h1>
+
+    <h2>Your songs:</h2>
+    <ul>
+        {% for song in songs %}
+        <li>
+            {{ song.name }} - {{ song.artist }}<br>
+            <audio controls>
+                <source src="{{ song.file_path }}" type="audio/mpeg">
+                Your browser doesnt support audio files.
+            </audio>
+        </li>
+        {% else %}
+        <li>You dont have any songs yet.</li>
+        {% endfor %}
+    </ul>
+
+    <form action="/profile" method="get">
+        <button type="submit">{{user.username}}</button>
+    </form>
+
+    <form action="/songs/add" method="post" enctype="multipart/form-data">
+        <label for="name">Song name:</label>
+        <input type="text" name="name" required><br>
+
+        <label for="artist">Autor:</label>
+        <input type="text" name="artist" required><br>
+
+        <label for="file">File:</label>
+        <input type="file" name="file" required><br>
+
+        <button type="submit">Add song</button>
+    </form>
+
+    <form action = "/songs/edit" method="post" enctype="multipart/form-data">
+        <h3>Edit song</h3>
+        <label for="name">Song name:</label>
+        <input type="text" name="name" required><br>
+
+        <label for="artist">Autor:</label>
+        <input type="text" name="artist" required><br>
+
+        <label for="new_name">New song name:</label>
+        <input type="text" name = "new_name" required><br>
+
+        <label for="new_artist">New autor:</label>
+        <input type="text" name = "new_artist" required><br>
+
+        <button type="submit">Change song</button>
+    </form>
+
+    <form action="/songs/delete" method="post" enctype="multipart/form-data">
+        <h3>Delete song</h3>
+        <label for="name">Song name:</label>
+        <input type="text" name="name" required><br>
+
+        <label for="artist">Autor:</label>
+        <input type="text" name="artist" required><br>
+
+        <button type="submit">Delete song</button>
+    </form>
+
+    <form action="/logout" method="get">
+        <button type="submit">Logout</button>
+    </form>
+</body>
+</html>

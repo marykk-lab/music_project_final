@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ song.name }} - {{ song.artist }}</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <h1>{{ song.name }}</h1>
+    <p>Artist: {{ song.artist }}</p>
+    <audio controls>
+        <source src="/{{ song.file_path }}" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <form action="/song/edit" method="post" enctype="multipart/form-data">
+        <h3>Edit Song</h3>
+        <input type="hidden" name="song_id" value="{{ song.id }}">
+        <label for="new_name">New Name:</label>
+        <input type="text" name="new_name" id="new_name" value="{{ song.name }}" required>
+        <label for="new_artist">New Artist:</label>
+        <input type="text" name="new_artist" id="new_artist" value="{{ song.artist }}" required>
+        <label for="new_file">New File:</label>
+        <input type="file" name="new_file" id="new_file" accept=".mp3,.wav,.ogg">
+        <button type="submit">Save Changes</button>
+    </form>
+    <form action="/song">
+        <button type="submit">Back to Playlist</button>
+    </form>
+</body>
+</html>
