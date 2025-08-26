@@ -21,6 +21,12 @@ h2 {
     color: #666;
 }
 
+h3 {
+    text-align: center;
+    margin-top: 10px;
+    color: #666;
+}
+
 
 ul {
     list-style-type: none;

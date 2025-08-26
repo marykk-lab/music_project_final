@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles.css">
+    <title>Update user</title>
+</head>
+<body>
+    <h1>Edit profile</h1>
+    <h2>Enter only data u want to change</h2>
+    <form action="/profile/edit" method="post">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username"><br>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password"><br>
+        <label for="email">Email</label>
+        <input type="text" id="email" name="email"><br>
+        <label for="full_name">Full_name</label>
+        <input type="text" name="full_name" id="full_name">
+        <button type="submit">Submit</button>
+    </form>
+    <form action="/songs">
+        <button type="submit">Back</button>
+    </form>
+
+</body>
+</html>

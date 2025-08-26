@@ -223,12 +223,41 @@ async def get_user_songs(request: Request, current_user: UserModel = Depends(get
 async def get_user_profile(request: Request, current_user: UserModel = Depends(get_current_active_user)):
     return templates.TemplateResponse("user_profile.html", {"request": request, "username": current_user.username, "email": current_user.email, "full_name": current_user.full_name})
 
+
+
 @app.get("/logout")
 async def logout(request: Request):
     response = RedirectResponse(url="/login", status_code=status.HTTP_303_SEE_OTHER)
     response.delete_cookie("access_token")  
     return response
 
+@app.get("/profile/edit", response_class=HTMLResponse)
+def get_edit_profile(request: Request):
+    return templates.TemplateResponse("update_user.html", {"request": request})
+
+@app.post("/profile/edit", response_class = HTMLResponse)
+def edit_profile(
+    request: Request, 
+    username: str = Form(...),
+    password: str = Form(...),
+    email: str = Form(...),
+    full_name: str = Form(...),
+    current_user: UserModel = Depends(get_current_active_user),
+    db: Session = Depends(get_db)):
+
+    if username:
+        current_user.username = username
+    if password:
+        current_user.hashed_password = get_password_hash(password)
+    if email:
+        current_user.email = email
+    if full_name:
+        current_user.full_name = full_name
+
+    db.commit()
+    db.refresh(current_user)
+    logout(request)
+    return templates.TemplateResponse("updated_user_success.html", {"request": request})
 
 @app.post("/songs/add", response_class=HTMLResponse)
 async def add_song(
@@ -267,7 +296,6 @@ async def edit_song(
     artist: str = Form(...),
     new_name: str = Form(...),
     new_artist: str = Form(...),
-    current_user: UserModel = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
     song = db.query(SongModel).filter(SongModel.name == name, SongModel.artist == artist).first()
@@ -292,7 +320,6 @@ async def delete_song(
     request: Request,
     name: str = Form(...),
     artist: str = Form(...),
-    current_user: UserModel = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
     song = db.query(SongModel).filter(SongModel.name == name, SongModel.artist == artist).first()
