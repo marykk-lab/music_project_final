@@ -1,0 +1,7 @@
+fastapi
+uvicorn[standard]
+jinja2
+python-multipart
+python-jose[cryptography]
+passlib[bcrypt]
+SQLAlchemy>=2.0

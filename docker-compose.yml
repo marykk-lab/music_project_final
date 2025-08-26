@@ -1,0 +1,8 @@
+services:
+  web:
+    build: .
+    command: uvicorn musicproject1:app --reload --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
