@@ -12,12 +12,14 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session, relationship
 from fastapi.responses import RedirectResponse
 from datetime import datetime, timedelta
+from starlette.middleware.sessions import SessionMiddleware
 import os
 
 
 app = FastAPI()
 templates = Jinja2Templates(directory="music_templates")
 app.mount('/static', StaticFiles(directory="static"), name="static")
+app.add_middleware(SessionMiddleware, secret_key="secret")
 
 SECRET_KEY = "secret_key_example"
 ALGORITHM = "HS256"
@@ -189,20 +191,19 @@ async def register(
 
 @app.get("/login", response_class=HTMLResponse)
 async def login_form(request: Request):
-    return templates.TemplateResponse("login_form.html", {"request": request})
+    message = request.session.pop("flash", None)
+    return templates.TemplateResponse("login_form.html", {"request": request, "message": message})
 
-@app.post("/token")
+@app.post("/token", response_class=HTMLResponse)
 async def login_for_access_token(
+    request: Request,
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db)
 ):
     user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        request.session["flash"] = "Incorrect user or password."
+        return RedirectResponse(url="/login", status_code=status.HTTP_303_SEE_OTHER)
 
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(data={"sub": user.username}, expires_delta=access_token_expires)
@@ -222,7 +223,6 @@ async def get_user_songs(request: Request, current_user: UserModel = Depends(get
 @app.get("/profile", response_class=HTMLResponse)
 async def get_user_profile(request: Request, current_user: UserModel = Depends(get_current_active_user)):
     return templates.TemplateResponse("user_profile.html", {"request": request, "username": current_user.username, "email": current_user.email, "full_name": current_user.full_name})
-
 
 
 @app.get("/logout")

@@ -8,6 +8,9 @@
 </head>
 <body>
     <h1>Login</h1>
+    {% if message %}
+        <div class="error">{{ message }}</div>
+    {% endif %}
     <form action="/token" method="post">
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required><br>

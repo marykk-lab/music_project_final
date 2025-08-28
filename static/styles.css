@@ -157,3 +157,25 @@ form[action="/logout"] button {
 form[action="/logout"] button:hover {
     background-color: #c82333;
 }
+
+:root {
+  --err-bg: #fff1f2;
+  --err-border: #fecdd3;
+  --err-text: #7f1d1d;
+}
+
+.error {
+    display: flex;
+    align-items: flex-start;
+    gap: .6rem;
+    padding: .75rem .9rem;
+    background: var(--err-bg);
+    border: 1px solid var(--err-border);
+    color: var(--err-text);
+    border-radius: .75rem;
+    line-height: 1.35;
+    box-shadow: 0 1px 0 rgba(0,0,0,.03) inset;
+    font-size: 0.95em;
+    margin: 0 auto 15px auto;
+    max-width: 800px;
+  }
