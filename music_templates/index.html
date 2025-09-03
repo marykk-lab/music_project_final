@@ -9,6 +9,10 @@
 <body>
     <h1>Welcome, {{ user.full_name or user.username }}!</h1>
 
+    {% if message %}
+        <div class="error">{{ message }}</div>
+    {% endif %}
+    
     <h2>Your songs:</h2>
     <ul>
         {% for song in songs %}
@@ -28,6 +32,7 @@
         <button type="submit">{{user.username}}</button>
     </form>
 
+
     <form action="/songs/add" method="post" enctype="multipart/form-data">
         <label for="name">Song name:</label>
         <input type="text" name="name" required><br>
@@ -36,7 +41,7 @@
         <input type="text" name="artist" required><br>
 
         <label for="file">File:</label>
-        <input type="file" name="file" required><br>
+        <input type="file" name="file" accept="audio/*,video/*" required><br>
 
         <button type="submit">Add song</button>
     </form>

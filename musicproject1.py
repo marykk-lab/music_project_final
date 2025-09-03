@@ -218,7 +218,8 @@ async def read_users_me(current_user: UserModel = Depends(get_current_active_use
 
 @app.get("/songs", response_class=HTMLResponse)
 async def get_user_songs(request: Request, current_user: UserModel = Depends(get_current_active_user)):
-    return templates.TemplateResponse("index.html", {"request": request, "songs": current_user.songs, "user": current_user})
+    message = request.session.pop("flash", None)
+    return templates.TemplateResponse("index.html", {"request": request, "songs": current_user.songs, "user": current_user, "message": message})
 
 @app.get("/profile", response_class=HTMLResponse)
 async def get_user_profile(request: Request, current_user: UserModel = Depends(get_current_active_user)):
@@ -300,10 +301,8 @@ async def edit_song(
 ):
     song = db.query(SongModel).filter(SongModel.name == name, SongModel.artist == artist).first()
     if not song:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Song not found or you do not have permission to edit it"
-        )
+        request.session["flash"] = "There is no such a song in your playlist."
+        return RedirectResponse(url="/songs", status_code=status.HTTP_303_SEE_OTHER)
     
     if name:
         song.name = new_name
@@ -324,10 +323,8 @@ async def delete_song(
 ):
     song = db.query(SongModel).filter(SongModel.name == name, SongModel.artist == artist).first()
     if not song:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Song not found or you dont have permission to delete it"
-        )
+        request.session["flash"] = "There is no such a song in your playlist."
+        return RedirectResponse(url="/songs", status_code=status.HTTP_303_SEE_OTHER)
     
     if os.path.exists(song.file_path):
         os.remove(song.file_path)
